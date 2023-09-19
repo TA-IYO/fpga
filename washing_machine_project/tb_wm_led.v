@@ -50,5 +50,3 @@ module tb_wm_led();
         .green_led_cold_only    (green_led_cold_only    ),
         .green_led_hot_cold     (green_led_hot_cold     )
     )           
-
-endmodule
