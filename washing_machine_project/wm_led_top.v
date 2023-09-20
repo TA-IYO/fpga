@@ -1,6 +1,7 @@
-module wm_led_top(
+module wm_led_top
+(
     input       clk,
-    input       rstn,
+    input       reset,
 
     output      red_led_wash,
     output      red_led_rinse,
@@ -17,13 +18,21 @@ module wm_led_top(
     output      green_led_cold_only,
     output      green_led_hot_cold
 );
+//`define FSIM
 
-parameter CNT_1MSEC = 125000;
-parameter CNT_1SEC = 1000;  
+`ifdef FSIM
+    parameter CNT_1MSEC = 125;
+`else
+    parameter CNT_1MSEC = 125_000;
+`endif
 
+    parameter CNT_1SEC = 1000;
+    parameter CNT_0P5SEC = 500;
+    
     reg     [23:0]      clkCnt_1ms;
     wire    clkCnt_1msEnd = (clkCnt_1ms == CNT_1MSEC - 1);
     wire    clkCnt_0p5msEnd = (clkCnt_1ms == (CNT_1MSEC/2) - 1) | (clkCnt_1ms == CNT_1MSEC - 1);
+    
     always @(posedge  clk or negedge rstn) begin
         if(~rstn)
             clkCnt_1ms <= 0;
@@ -35,6 +44,7 @@ parameter CNT_1SEC = 1000;
 
     reg     [23:0]      clkCnt_1sec;
     wire    clkCnt_1secEnd = clkCnt_1msEnd & (clkCnt_1sec == CNT_1SEC -1);
+    wire    clkCnt_0p5secEnd = clkCnt_1msEnd & ((clkCnt_1sec == CNT_1SEC -1) | (clkCnt_1sec == CNT_0P5SEC -1));
     
     always @(posedge clk or negedge rstn) begin
         if(~rstn)
@@ -46,13 +56,31 @@ parameter CNT_1SEC = 1000;
                 clkCnt_1sec <= clkCnt_1sec + 1;
         end
     end
+    
+    wire            cntEn       =   clkCnt_0p5secEnd;
+    wire    [7:0]   cntStartVal =   0;
+    wire    [7:0]   cntEndVal   =   2;    
 
-wm_led_onoff wm_led_onoff_wash(clk, rstn, 1'b1, clkCnt_1secEnd, red_led_wash);
-wm_led_onoff wm_led_onoff_rinse(clk, rstn, 1'b1, clkCnt_1secEnd, red_led_rinse);
-wm_led_onoff wm_led_onoff_dry(clk, rstn, 1'b1, clkCnt_1secEnd, red_led_dry);
+    reg     [7:0]   cnt;
+    always @(posedge clk or negedge rstn) begin
+        if(~rstn)
+            cnt <= cntStartVal;
+        else if(cntEn) begin
+            if(cnt == cntEndVal)
+                cnt <= cntStartVal;
+            else
+                cnt <= cnt + 1;
+        end
+    end
+    
+wire rstn = ~reset;
+
+wm_led_onoff wm_led_onoff_wash(clk, rstn, 1'b1, clkCnt_0p5secEnd, cnt, red_led_wash);
+wm_led_onoff wm_led_onoff_rinse(clk, rstn, 1'b1, clkCnt_0p5secEnd, cnt, red_led_rinse);
+wm_led_onoff wm_led_onoff_dry(clk, rstn, 1'b1, clkCnt_0p5secEnd, cnt, red_led_dry);
 
 assign red_led_repeat = 0;
-assign red_led_water_high = 0;
+assign red_led_water_height = 0;
 assign red_led_hot_cold = 0;
 assign green_led_water_high = 1;
 assign green_led_water_mid = 1;
