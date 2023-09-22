@@ -8,7 +8,7 @@ wire        led_out;
 
 initial begin
     clk = 0;
-    forever clk = #5 ~clk;
+    forever clk = #4 ~clk;
 end
 
 initial begin
