@@ -21,7 +21,7 @@ module wm_led_top (
 	output			green_led_hot_cold,
 
 	input			but_in_left,
-	input			but_in_right,
+	input			but_in_right,   
 	input			but_in_up,
 	input			but_in_down,
 
