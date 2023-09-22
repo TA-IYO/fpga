@@ -63,9 +63,9 @@ module wm_fnd_ctrl (
 
 
 	wire [3:0] fnd_data =
-		(dig == 3'b001) ? fndValIn[11:8] :
+		(dig == 3'b001) ? fndValIn[3:0] :
 		(dig == 3'b010) ? fndValIn[7:4] :
-		(dig == 3'b100) ? fndValIn[3:0] : 0;
+		(dig == 3'b100) ? fndValIn[11:8] : 0;
 
 	reg				seg7_digitsCntEnD1;
     always @(posedge clk or negedge rstn) begin
@@ -87,3 +87,4 @@ module wm_fnd_ctrl (
 
 
 endmodule
+
