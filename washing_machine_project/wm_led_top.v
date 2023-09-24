@@ -101,7 +101,7 @@ module wm_led_top (
             	clkCnt_1sec <= clkCnt_1sec + 1;
 		end
     end
-
+/*
 	wire cntEn = clkCnt_0p5secEnd;
 	wire [7:0] cntStartVal = 0;
 	wire [7:0] cntEndVal = 2;
@@ -121,7 +121,7 @@ module wm_led_top (
 				cnt <= cnt + 1;
 		end
 	end
-
+*/
 
 	//wm_led_onoff wm_led_onoff_wash  (clk, rstn, 1'b1, clkCnt_0p5secEnd, cnt, red_led_wash);
 	//wm_led_onoff wm_led_onoff_rinse (clk, rstn, 1'b1, clkCnt_0p5secEnd, cnt, red_led_rinse);
