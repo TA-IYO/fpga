@@ -5,7 +5,7 @@ module wm_led_onoff (
 	input			rstn,
 	input			ledEn,
 	input			clkCnt_0p5secEnd,
-	input	[7:0]		cnt,
+	input	[7:0]	cnt,
 	output reg		led_onoff
 );
 
