@@ -1,3 +1,4 @@
+
 module buzzer (
 	input			   clk,
 	input			   rstn,
@@ -5,9 +6,9 @@ module buzzer (
 	input			   in_freq,
 	output     reg	   out_buz
 );
-
+//`define FSIM
 `ifdef FSIM
-	parameter BUZ_TIME = 800;
+	parameter BUZ_TIME = 3000;
 `else
 	parameter BUZ_TIME = 125_000_000;
 `endif
